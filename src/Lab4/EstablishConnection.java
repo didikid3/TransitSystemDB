@@ -24,7 +24,7 @@ public class EstablishConnection {
     private void connect(){
         try{  
 			con=DriverManager.getConnection(  
-			"jdbc:mysql://localhost:3306/" + databaseName,"root","111Brandon");
+			"jdbc:mysql://localhost:3306/" + databaseName,"root","root");
 			}
 		catch(Exception e)
 		{
@@ -172,7 +172,7 @@ public class EstablishConnection {
 
         try{
             rs = selects.query(select, from, where);
-            
+
             System.out.format("%5s%10s%15s%15s%10s%10s\n",
                 "Trip#", "Date", 
                 "Start Time", "Arrival Time",
