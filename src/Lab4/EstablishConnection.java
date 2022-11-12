@@ -13,6 +13,8 @@ public class EstablishConnection {
     private ResultSet rs;
     private Scanner scan;
 
+    private Inserts inserts;
+    private Selects selects;
 
     public EstablishConnection(String database){
         databaseName = database;
@@ -28,6 +30,10 @@ public class EstablishConnection {
 		{
 			System.out.println(e);
 		} 
+
+        inserts = new Inserts(con, stmt);
+        selects = new Selects(con, stmt);
+
     }
 
     private void disconnect(){
@@ -57,8 +63,8 @@ public class EstablishConnection {
         String where =  "ON trip_offering.TripNumber = trip.TripNumber";
 
         try{
-            stmt=con.createStatement();
-            rs=stmt.executeQuery(select + " " + from + " " + where); 
+            rs = selects.query(select, from, where);
+
             System.out.format("%5s%15s%15s%10s%15s%15s%10s%10s\n",
                 "Trip#", "Where", "Destination",
                 "Date", "Start Time", "Arrival Time",
@@ -129,8 +135,7 @@ public class EstablishConnection {
         String where = "ON trip.TripNumber = trip_stop_info.TripNumber";
 
         try{
-            stmt=con.createStatement();
-            rs=stmt.executeQuery(select + " " + from + " " + where);
+            rs = selects.query(select, from, where);
 
             System.out.format("%6s%8s%13s%6s\n",
                             "Trip #", "Stop #",
@@ -166,8 +171,8 @@ public class EstablishConnection {
         where += scan.nextLine() + "'";
 
         try{
-            stmt=con.createStatement();
-            rs=stmt.executeQuery(select + " " + from + " " + where); 
+            rs = selects.query(select, from, where);
+            
             System.out.format("%5s%10s%15s%15s%10s%10s\n",
                 "Trip#", "Date", 
                 "Start Time", "Arrival Time",
@@ -205,14 +210,8 @@ public class EstablishConnection {
         System.out.print("Telephone Number: ");
         values += "," + "'" + scan.nextLine() + "'" + ")";
    
-        try{
-            stmt=con.createStatement();
-            stmt.executeUpdate(insert + " " + values);
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
 
+        inserts.insert(insert, values);
     }
     
     /*
@@ -231,14 +230,7 @@ public class EstablishConnection {
         values += "," + scan.nextLine() + ")";
 
 
-        try{
-            stmt=con.createStatement();
-            stmt.executeUpdate(insert + " " + values);
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-
+        inserts.insert(insert, values);
     }
 
     /*
@@ -305,14 +297,7 @@ public class EstablishConnection {
             values += tripNumber + ", '" + date + "' , '" + scheduledStartTime + "' , '" +
                     scheduledArrivalTime + "' , '" + driverName + "' , " + busID + ")";
 
-            try{
-                stmt=con.createStatement();
-                stmt.executeUpdate(insert + " " + values);
-            }
-            catch(Exception e){
-                System.out.println(e);
-            }
-
+            inserts.insert(insert, values);
 
             System.out.println("Do you have more inputs?");
             System.out.print("Type 'done' if no more: ");
@@ -373,7 +358,7 @@ public class EstablishConnection {
     }
 
 
-    
+
     public void start(){
         connect();
     }
