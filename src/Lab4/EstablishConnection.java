@@ -54,8 +54,7 @@ public class EstablishConnection {
      * and Date. In addition to these attributes, the schedule includes: Scheduled StartTime, 
      * ScheduledArrivalTime , DriverID, and BusID. 
      */
-    
-    private ResultSet displaySchedule(){
+    private void displaySchedule(){
         String select = "SELECT trip.TripNumber, StartLocationName, " +
                         "DestinationName, Date," +
                         "ScheduledStartTime, ScheduledArrivalTime," +
@@ -65,49 +64,32 @@ public class EstablishConnection {
 
         try{
             rs = selects.query(select, from, where);
+
+            System.out.format("%5s%15s%15s%10s%15s%15s%10s%10s\n",
+                "Trip#", "Where", "Destination",
+                "Date", "Start Time", "Arrival Time",
+                "Driver", "Bus");
+            while (rs.next()){
+                int tripNumber = rs.getInt("TripNumber");
+                String startLocationName = rs.getString("StartLocationName");
+                String destinationName = rs.getString("DestinationName");
+                String date = rs.getString("Date");
+                String schedStartTime = rs.getString("ScheduledStartTime");
+                String schedArrivalTime = rs.getString("ScheduledArrivalTime");
+                String driverName = rs.getString("DriverName");
+                int busID = rs.getInt("BusID");
+
+                System.out.format("%5d%15s%15s%10s%15s%15s%10s%10d\n",
+                                    tripNumber, startLocationName, destinationName,
+                                    date, schedStartTime, schedArrivalTime,
+                                    driverName, busID);
+            }
         }
         catch(Exception e){
             System.out.println(e);
         }
-        return rs;
 
     }
-    // private void displaySchedule(){
-    //     String select = "SELECT trip.TripNumber, StartLocationName, " +
-    //                     "DestinationName, Date," +
-    //                     "ScheduledStartTime, ScheduledArrivalTime," +
-    //                     "DriverName, BusID";
-    //     String from =   "FROM trip_offering JOIN trip";
-    //     String where =  "ON trip_offering.TripNumber = trip.TripNumber";
-
-    //     try{
-    //         rs = selects.query(select, from, where);
-
-    //         System.out.format("%5s%15s%15s%10s%15s%15s%10s%10s\n",
-    //             "Trip#", "Where", "Destination",
-    //             "Date", "Start Time", "Arrival Time",
-    //             "Driver", "Bus");
-    //         while (rs.next()){
-    //             int tripNumber = rs.getInt("TripNumber");
-    //             String startLocationName = rs.getString("StartLocationName");
-    //             String destinationName = rs.getString("DestinationName");
-    //             String date = rs.getString("Date");
-    //             String schedStartTime = rs.getString("ScheduledStartTime");
-    //             String schedArrivalTime = rs.getString("ScheduledArrivalTime");
-    //             String driverName = rs.getString("DriverName");
-    //             int busID = rs.getInt("BusID");
-
-    //             System.out.format("%5d%15s%15s%10s%15s%15s%10s%10d\n",
-    //                                 tripNumber, startLocationName, destinationName,
-    //                                 date, schedStartTime, schedArrivalTime,
-    //                                 driverName, busID);
-    //         }
-    //     }
-    //     catch(Exception e){
-    //         System.out.println(e);
-    //     }
-
-    // }
     
     /*
      * Feature 2
@@ -423,6 +405,24 @@ public class EstablishConnection {
         }
 
         disconnect();
+    }
+
+    public ResultSet getSchedule(){
+        String select = "SELECT trip.TripNumber, StartLocationName, " +
+                        "DestinationName, Date," +
+                        "ScheduledStartTime, ScheduledArrivalTime," +
+                        "DriverName, BusID";
+        String from =   "FROM trip_offering JOIN trip";
+        String where =  "ON trip_offering.TripNumber = trip.TripNumber";
+
+        try{
+            rs = selects.query(select, from, where);
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        return rs;
+
     }
 
     
