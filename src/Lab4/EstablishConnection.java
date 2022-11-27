@@ -407,23 +407,6 @@ public class EstablishConnection {
         disconnect();
     }
 
-    public ResultSet getSchedule(){
-        String select = "SELECT trip.TripNumber, StartLocationName, " +
-                        "DestinationName, Date," +
-                        "ScheduledStartTime, ScheduledArrivalTime," +
-                        "DriverName, BusID";
-        String from =   "FROM trip_offering JOIN trip";
-        String where =  "ON trip_offering.TripNumber = trip.TripNumber";
-
-        try{
-            rs = selects.query(select, from, where);
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-        return rs;
-
-    }
 
     
 }
